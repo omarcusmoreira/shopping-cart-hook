@@ -22,19 +22,38 @@ interface CartContextData {
 const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
+  
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem('@RocketShoes:cart')
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
-
+    if (storagedCart) {
+      console.log("Cart:  "+ JSON.parse(storagedCart));
+       return [JSON.parse(storagedCart)];
+     }
     return [];
   });
 
+  const [stock, setStock] = useState<Stock[]>(() => {
+    const storagedStock = localStorage.getItem('@RocketShoes:stock')
+
+    if (storagedStock) {
+      console.log("Stock:  "+ storagedStock);
+       return [JSON.parse(storagedStock)];
+     }
+    return [];
+  });
+
+  const storagedCart = localStorage.getItem('@RocketShoes:cart')
+
+
   const addProduct = async (productId: number) => {
+   
+    const productsInStock = stock.find((product) => product.id === productId);
+    const productsInCart = cart.find((product) => product.id === productId);
+
     try {
       // TODO
+
     } catch {
       // TODO
     }
