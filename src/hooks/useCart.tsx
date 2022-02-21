@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
 import { Product, Stock } from '../types';
@@ -27,23 +27,25 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     const storagedCart = localStorage.getItem('@RocketShoes:cart')
 
     if (storagedCart) {
-      console.log("Cart:  "+ JSON.parse(storagedCart));
+      console.log("Cart:  ", (storagedCart));
        return [JSON.parse(storagedCart)];
      }
     return [];
   });
 
-  const [stock, setStock] = useState<Stock[]>(() => {
-    const storagedStock = localStorage.getItem('@RocketShoes:stock')
+  const [stock, setStock] = useState<Stock[]>([]);
 
-    if (storagedStock) {
-      console.log("Stock:  "+ storagedStock);
-       return [JSON.parse(storagedStock)];
-     }
-    return [];
-  });
+  useEffect( () => {
+    const getStock = async () => {
+    try {
+      const { data } = await api.get("stock");
+      setStock(data);
+      console.log("Stock:  ",data)
 
-  const storagedCart = localStorage.getItem('@RocketShoes:cart')
+    } catch {}
+  }
+  getStock();
+  },[])
 
 
   const addProduct = async (productId: number) => {
@@ -53,6 +55,14 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
     try {
       // TODO
+      if (productsInStock) {
+        
+
+      }else{
+         
+
+      }
+
 
     } catch {
       // TODO
